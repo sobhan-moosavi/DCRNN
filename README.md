@@ -8,7 +8,7 @@ In this repository we provide all the implementations for our models and baselin
 * Feature Vector V2
 
 ## Models
-* D-CRNN: this is our proposed model to perform driver prediction based on driving style information. This model combines several important compoenents of deep-neural-network architectures including recurrent, convolutional, and fully connected components. An implementation of this model in Tensorflow can be find [here](#). Following diagram also describes the design of this model: <center><img src="/files/D-CRNN_2.png" width="800"></center>
+* D-CRNN: this is our proposed model to perform driver prediction based on driving style information. This model combines several important compoenents of deep-neural-network architectures including recurrent, convolutional, and fully connected components. An implementation of this model in Tensorflow can be find [here](#). Following diagram also describes the design of this model: <center><img src="/files/D-CRNN_2.png" width="900"></center>
 
 * VRAE: this is the Variational Recurrent Auto-encoder model, proposed by [Fabius and Amersfoort (2015)](https://arxiv.org/abs/1412.6581). Here we extend the [original implementation](https://github.com/y0ast/Variational-Recurrent-Autoencoder) to use it for driver prediction task by a modified loss function. The implementation of this model in Theano can be find [here](#). 
 
