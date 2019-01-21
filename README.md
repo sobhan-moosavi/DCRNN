@@ -21,7 +21,7 @@ In this repository we provide all the implementations for our models and baselin
 
 
 ## Sample Data
-You may find a raw sample file in ```data``` directory. The format of this file is described in following tables: 
+You may find a raw sample file in ```data/``` directory. The format of this file is described in following tables: 
 
 | Attribute | Description |
 |:---------:|-------------|
