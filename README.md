@@ -21,6 +21,21 @@ In this repository we provide all the implementations for our models and baselin
 
 
 ## Sample Data
+You may find a raw sample file in ```data``` directory. The format of this file is described in following tables: 
 
+| Attribute | Description |
+|:---------:|-------------|
+|Driver| Indicates driver id, which is a string. |
+|ID| Indicates trajectory id, which is a string. |
+|Time| An integer which indicates the timestep for a datapoint of a trajectory. |
+|Lat| Shows the latitude value. |
+|Lon| Shows the longitude value. |
+|Speed| Shows the ground velocity of the vehicle as reported by OBD-II port. |
+|Acceleration| Shows the rated of change of ground velocity. |
+|RPM| Shows the round per minute, as reported by OBD-II port. |
+|Heading| Shows the bearing of the vehicle, which is anumber between 0 and 359. |
+|AccelX| Shows the acceleration sensor reading along with X-axis. |
+|AccelY| Shows the acceleration sensor reading along with Y-axis. |
+|AccelZ| Shows the acceleration sensor reading along with Z-axis. |
 
 ## Acknowledgments 
