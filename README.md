@@ -43,3 +43,4 @@ You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN
 |AccelZ| Shows the acceleration sensor reading along with Z-axis. |
 
 ## Acknowledgments 
+Please cite the following paper when use this code: TBD
