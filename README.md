@@ -12,7 +12,7 @@ In this repository we provide all the implementations for our models and baselin
 
 * VRAE: this is the Variational Recurrent Auto-encoder model, and is based on [this](https://github.com/y0ast/Variational-Recurrent-Autoencoder) model. We modified this code to use it as a generative as well as predictive model for driver prediction task. The modified implementation of this model in Theano can be find [here](#). 
 
-* GBDT: this is a Gradient Boosting Decision Tree model which we use it for driver prediction task. A Python imeplementatin of this method based on Sklearn library is available [here](#). 
+* GBDT: this is a Gradient Boosting Decision Tree model which we use it for driver prediction task. A Python imeplementatin of this method based on scikit-learn library is available [here](#). 
 
 * CNN-model: this is a Convolutional Neural Network model to perform driver prediction task, and is proposed by [Dong et al. (2016)](https://arxiv.org/abs/1607.03611). Imeplementation of this method in Tensorflow can be find [here](#). 
 
