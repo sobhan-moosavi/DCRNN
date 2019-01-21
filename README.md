@@ -19,10 +19,14 @@ In this repository we provide all the implementations for our models and baselin
 * __RNN-model__: this is a Recurrent Neural Network model to perform driver prediction task, and is proposed by [Dong et al. (2016)](https://arxiv.org/abs/1607.03611). Imeplementation of this method in Tensorflow can be find [here](#). 
 
 ## Requirements
-
+All the models are developed in Python. You may use either Python 2.7 or 3. For all deep models except VRAE, you need Tensorflow (version >= 1.3.0) and Cuda (version > 8.0.61). 
 
 ## How to Run
-
+You may follow these steps: 
+* Generate Feature Matrix: 
+* Create Train and Test sets: 
+* Run Deep Models: 
+* Run GBDT Models: 
 
 ## Sample Data
 You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN/tree/master/data) directory. The format of this file is described as follows: 
