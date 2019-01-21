@@ -28,8 +28,8 @@ You may find a raw sample file in ```data/``` directory. The format of this file
 |Driver| Indicates driver id, which is a string. |
 |ID| Indicates trajectory id, which is a string. |
 |Time| An integer which indicates the timestep for a datapoint of a trajectory. |
-|Lat| Shows the latitude value. |
-|Lon| Shows the longitude value. |
+|Lat| Shows the latitude value of GPS coordinate. |
+|Lon| Shows the longitude value of GPS coordinate. |
 |Speed| Shows the ground velocity of the vehicle as reported by OBD-II port. |
 |Acceleration| Shows the rated of change of ground velocity. |
 |RPM| Shows the round per minute, as reported by OBD-II port. |
