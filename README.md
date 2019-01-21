@@ -46,5 +46,8 @@ You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN
 |AccelY| Shows the acceleration sensor reading along with Y-axis. |
 |AccelZ| Shows the acceleration sensor reading along with Z-axis. |
 
+
+## Sample Results
+
 ## Acknowledgments 
 Please cite the following paper when use this code: TBD
