@@ -33,7 +33,7 @@ You may find a raw sample file in ```data/``` directory. The format of this file
 |Speed| Shows the ground velocity of the vehicle as reported by OBD-II port. |
 |Acceleration| Shows the rate of change of ground velocity (speed). |
 |RPM| Shows the round per minute, as reported by OBD-II port. |
-|Heading| Shows the bearing of the vehicle, which is anumber between 0 and 359. |
+|Heading| Shows the bearing of the vehicle, which is a value between 0 and 359. |
 |AccelX| Shows the acceleration sensor reading along with X-axis. |
 |AccelY| Shows the acceleration sensor reading along with Y-axis. |
 |AccelZ| Shows the acceleration sensor reading along with Z-axis. |
