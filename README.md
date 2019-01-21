@@ -21,7 +21,7 @@ In this repository we provide all the implementations for our models and baselin
 
 
 ## Sample Data
-You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN/tree/master/data) directory. The format of this file is described in following tables: 
+You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN/tree/master/data) directory. The format of this file is described as follows: 
 
 | Attribute | Description |
 |:---------:|-------------|
