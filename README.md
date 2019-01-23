@@ -29,7 +29,7 @@ You may follow these steps:
 * Run GBDT Models: 
 
 ## Sample Data
-You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN/tree/master/data) directory. In this file we have 10 drivers, and 10 random trajectories for each driver. The format of this file is described as follows: 
+You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN/tree/master/data) directory. In this file we have 5 drivers, and 10 random trajectories for each driver. The format of this file is described as follows: 
 
 | Attribute | Description |
 |:---------:|-------------|
