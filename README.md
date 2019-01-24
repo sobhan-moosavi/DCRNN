@@ -3,9 +3,9 @@
 In this repository we provide all the implementations for our models and baselines, along with several sample files to reproduce our results.
 
 ## Feature Engineering 
-* Statistical Feature Map
-* Feature Vector V1
-* Feature Vector V2
+* Statistical Feature Matrix: to generate feature matrix as input for deep models, use ```Create_FeatureMatrix.py```. 
+* Feature Vector V1: to generate the original feature vector for a trajectory to be used by GBDT model, use ```Create_FeatureVector_V1.py```. 
+* Feature Vector V2: to generate the modified feature vector for a trajectory to be used by GBDT model, use ```Create_FeatureVector_V2.py```. 
 
 ## Models
 * __D-CRNN__: this is our proposed model to perform driver prediction based on driving style information. This model combines several important compoenents of deep-neural-network architectures including recurrent, convolutional, and fully connected components. An implementation of this model in Tensorflow can be find [here](#). Following diagram also describes the design of this model: <center><img src="/files/D-CRNN_2.png" width="1100"></center>
