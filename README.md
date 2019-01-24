@@ -53,16 +53,16 @@ You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN
 
 
 ## Sample Results
-The following result is on a random sample set of 50 drivers, with 50 trajectories per driver: 
+Following is the result of different models on a random sample set of 50 drivers, with 50 trajectories per driver. For deep models, we report accuracy on both segment as well as trajectory. 
 
 | Model | Accuracy--Segment | Accuracy--Trajectory |
 |:-----:|:-----------------:|:--------------------:|
-| GBDT-V1| -- | ??% |
-| GBDT-V2| -- | ??% |
-| CNN-model | ??% | ??% |
-| RNN-model | ??% | ??% |
-| VRAE | ??% | ??% |
-| D-CRNN | ??% | ??% |
+| GBDT-V1| -- | 25.13% |
+| GBDT-V2| -- | 49.24% |
+| CNN-model | 42.83% | 59.90% |
+| RNN-model | 55.45% | 70.73% |
+| VRAE | 51.28% | 63.67% |
+| D-CRNN | __62.94%__ | __78.00%__ |
 
 
 ## Acknowledgments 
