@@ -23,9 +23,8 @@ All the models are developed in Python. You may use either Python 2.7 or 3. For 
 
 ## How to Run
 You may follow these steps: 
-* Generate Feature Matrix: 
-* Create Train and Test sets: 
-* Run Deep Models: 
+* Generate Feature Matrix: Use ```python Create_FeatureMatrix.py``` to create feature matrix. This will result in creating two files in __data__ directory, one _npy_ and one _pkl_ file. 
+* Run Deep Models: You just need to use ```python [MODEL_NAME].py```. Make sure you have all the requirements satisfied. 
 * Run GBDT Models: 
 
 ## Sample Data
