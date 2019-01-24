@@ -53,6 +53,17 @@ You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN
 
 
 ## Sample Results
+The following result is on a random sample set of 50 drivers, with 50 trajectories per driver: 
+
+| Model | Accuracy--Segment | Accuracy--Trajectory |
+|:-----:|:-----------------:|:--------------------:|
+| GBDT-V1| -- | ??% |
+| GBDT-V2| -- | ??% |
+| CNN-model | ??% | ??% |
+| RNN-model | ??% | ??% |
+| VRAE | ??% | ??% |
+| D-CRNN | ??% | ??% |
+
 
 ## Acknowledgments 
 Please cite the following paper when use this code: TBD
