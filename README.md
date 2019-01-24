@@ -20,9 +20,9 @@ In this repository we provide all the implementations for our models and baselin
 
 ## Requirements
 * __Python__: You may use either Python 2.7 or 3. 
-* __Tensorflow__: For all deep models except VRAE, you need Tensorflow (version >= 1.12.0). 
+* __Tensorflow__: For all deep models except VRAE, you need Tensorflow (version >= 1.12.0 is recommended). 
 * __Theano__: To run VRAE model, you need theano version > ??. 
-* __Cuda Library__: You need to have Cuda version > 9.0.176. 
+* __Cuda Library__: You need to have Cuda Library for tensorflow-based codes, and version > 9.0.176 is recommended. 
 * __Scikit-learn__: For GBDT models, you need to install scikit-learn library. 
 
 Note that our models can be run on both CPU and GPU machines. 
