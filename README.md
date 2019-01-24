@@ -25,6 +25,8 @@ In this repository we provide all the implementations for our models and baselin
 * Cuda Library: You need to have Cuda version > 9.0.176. 
 * Scikit-learn: For GBDT models, you need to install scikit-learn library. 
 
+Note that our models can be run on both CPU and GPU machines. 
+
 ## How to Run
 You may follow these steps: 
 * Generate Feature Matrix: Use ```python Create_FeatureMatrix.py``` to create feature matrix. This will result in creating two files in __data__ directory, one _npy_ and one _pkl_ file. 
