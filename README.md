@@ -19,11 +19,11 @@ In this repository we provide all the implementations for our models and baselin
 * __RNN-model__: this is a Recurrent Neural Network model to perform driver prediction task, and is proposed by [Dong et al. (2016)](https://arxiv.org/abs/1607.03611). Imeplementation of this method in Tensorflow can be find [here](#). 
 
 ## Requirements
-* Python: You may use either Python 2.7 or 3. 
-* Tensorflow: For all deep models except VRAE, you need Tensorflow (version >= 1.12.0). 
-* Theano: To run VRAE model, you need theano version > ??. 
-* Cuda Library: You need to have Cuda version > 9.0.176. 
-* Scikit-learn: For GBDT models, you need to install scikit-learn library. 
+* __Python__: You may use either Python 2.7 or 3. 
+* __Tensorflow__: For all deep models except VRAE, you need Tensorflow (version >= 1.12.0). 
+* __Theano__: To run VRAE model, you need theano version > ??. 
+* __Cuda Library__: You need to have Cuda version > 9.0.176. 
+* __Scikit-learn__: For GBDT models, you need to install scikit-learn library. 
 
 Note that our models can be run on both CPU and GPU machines. 
 
