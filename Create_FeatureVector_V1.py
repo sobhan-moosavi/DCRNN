@@ -163,7 +163,7 @@ def helper_rectangle(points):
 # to generate feature vector for a trajectory
 def generateFeatureVector():
     trajectories = {}
-    filename = 'RandomSample_5_10.csv'
+    filename = 'data/RandomSample_5_10.csv'
     
     with open(filename, 'r') as f:
         lines = f.readlines()
@@ -343,10 +343,10 @@ def generateFeatureVector():
     print("######## statistical features created ###########")
     keys = [k.split("|") for k, v in statisticalFeatureMatrix.items()]
     list_1 = statisticalFeatureMatrix.values()
-    print(len(list_1))
-    print(len(list_1[0]))    
+    print('number of drivers:', len(list_1))
+    print('size of each feature vector:', len(list_1[0]))    
     
-    file_name = 'data/non_deep_features'
+    file_name = 'data/non_deep_features_v1'
     cPickle.dump(keys, open(file_name + '.pkl', "wb"))
     del keys
     np.save(file_name + '.npy', np.vstack(statisticalFeatureMatrix.values()))
