@@ -30,6 +30,7 @@ Note that our models can be run on both CPU and GPU machines.
 ## How to Run
 You may follow these steps: 
 * Generate Feature Matrix: Use ```python Create_FeatureMatrix.py``` to create feature matrix. This will result in creating two files in __data__ directory, one _npy_ and one _pkl_ file. 
+* Generate Feature Vector: This is to generate input for non-deep models, such as GBDT. For the original version of features as described [here](), use ```Create_FeatureVector_V1.py```, and for the modified version as described in [our paper](), use ```Create_FeatureVector_V2.py```. 
 * Run Deep Models: You just need to use ```python [MODEL_NAME].py```. Make sure you have all the requirements satisfied. 
 * Run GBDT Models: 
 
