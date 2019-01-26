@@ -235,7 +235,7 @@ def returnTripLevelAccuracy(test_labels, test_tripId, probabilities, num_classes
   
 if __name__ == '__main__':
 
-    ITERATIONS = 3  # number of times to repeat the whole pipeline
+    ITERATIONS = 3  # number of times to repeat the experiment 
     ALL_SEG_ACC = []
     ALL_TRP_ACC = []
 
