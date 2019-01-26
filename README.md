@@ -56,7 +56,7 @@ You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN
 
 
 ## Sample Results
-Following is the result of different models on a random sample set of 50 drivers, with 50 trajectories per driver. For deep models, we report accuracy on both segment as well as trajectory, see the [paper](#) for details. 
+Following is the result of different models on a random sample set of 50 drivers, with 50 trajectories for each driver. For deep models, we report accuracy on both segment as well as trajectory, see the [paper](#) for details. 
 
 | Model | Accuracy--Segment | Accuracy--Trajectory |
 |:-----:|:-----------------:|:--------------------:|
