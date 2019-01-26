@@ -1,29 +1,16 @@
-
-# coding: utf-8
-
-# In[1]:
-#Version 2: use Speed, Acceleration, and RPM to generate feature matrix
-
+'''
+    This code is to create feature matrix for non-deep learning baselines such as Gradient Boosting Decision Tree (GBDT) model. 
+    Feature vector here is the modified vector, as opposed to the one which is proposed by Dong et al. (2016), as their non-deep learning baseline. 
+    Vector created by this method will be of size 384, where it uses following basic features: Engine Speed, Engine Acceleration, Engine RPM, and Angular Speed
+    Developed by: Sreeja R. Thoom 
+    Updated by: Sobhan Moosavi    
+'''
 
 import numpy as np
 import math
 from scipy import stats
 import time
-import argparse
 import cPickle
-
-# In[2]:
-
-import argparse
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--shape', type=int, nargs='+', default=[50, 50])
-parser.add_argument('--thresh', type=float, default=0.1)
-parser.add_argument('--test', type=str, default='small')
-args = parser.parse_args()
-shape = args.shape
-thresh = args.thresh
-test_type = args.test
 
 
 class point:
@@ -42,9 +29,6 @@ class point:
         self.rpm = rpm
 
 
-# In[3]:
-
-
 class basicfeatures:
     speedNorm = 0
     accelNorm = 0
@@ -58,10 +42,7 @@ class basicfeatures:
         self.diffAccelNorm = diffAccelNorm
         self.angularSpeed = angularSpeed
 
-
-# In[4]:
-
-
+# to calculate angular speed        
 def returnAngularDisplacement(fLat, fLon, sLat, sLon):
     #Inspired by: https://www.quora.com/How-do-I-convert-radians-per-second-to-meters-per-second
     
@@ -73,10 +54,7 @@ def returnAngularDisplacement(fLat, fLon, sLat, sLon):
     dis = np.sqrt((fLat-sLat)**2 + (fLon-sLon)**2)
     return dis
 
-
-# In[5]:
-
-
+# a helper function to calculate several statistics
 def helper_loacl_stats(arr, mean):
     column = []
     if len(arr)!=0:
@@ -98,21 +76,15 @@ def helper_loacl_stats(arr, mean):
         column.extend([0.0,0.0,0.0,0.0,0.0,0.0,0.0])
     return column
 
-
-# In[6]:
-
-
-def normalizeStatFeatureMatrix(statisticalFeatureMatrix, minimum=0, maximum=10):
+# to normalize feature vector created for a trajectory
+def normalizeStatFeatureMatrix(statisticalFeatureVector, minimum=0, maximum=10):
     r = float(maximum-minimum)
-    mins = statisticalFeatureMatrix.min((0))
-    maxs = statisticalFeatureMatrix.max((0))    
-    statisticalFeatureMatrix = np.nan_to_num(minimum + ((statisticalFeatureMatrix-mins)/(maxs-mins))*r)
-    return statisticalFeatureMatrix
+    mins = statisticalFeatureVector.min((0))
+    maxs = statisticalFeatureVector.max((0))    
+    statisticalFeatureVector = np.nan_to_num(minimum + ((statisticalFeatureVector-mins)/(maxs-mins))*r)
+    return statisticalFeatureVector
 
-
-# In[7]:
-
-
+# to return bin value for heading to create several buckets
 def returnBinValue(fLat, fLng, sLat, sLng, tLat, tLng):
     sf = haversineDistance(sLat, sLng, fLat, fLng, metric='meters')
     st = haversineDistance(sLat, sLng, tLat, tLng, metric='meters')
@@ -142,10 +114,7 @@ def returnBinValue(fLat, fLng, sLat, sLng, tLat, tLng):
     else:
         return 8    
 
-
-# In[9]:
-
-
+# to calculate haversine distance between two points 
 def haversineDistance(aLat, aLng, bLat, bLng, metric='mi'):
     #From degree to radian
     fLat = math.radians(aLat)
@@ -166,10 +135,7 @@ def haversineDistance(aLat, aLng, bLat, bLng, metric='mi'):
        
     return R * c
 
-
-# In[18]:
-
-
+# a helper function to calculate rectangle-based features
 def helper_rectangle(points):
     result= []
     min_lat = points[0].lat
@@ -194,18 +160,11 @@ def helper_rectangle(points):
     result.append(length)
     result.append(bredth)
     return result
-    
 
-
-# In[19]:
-
-
-def generateStatisticalFeatureMatrix(Ls=256, Lf=4):
+# to generate feature vector for a trajectory
+def generateStatisticalFeatureVector(Ls=256, Lf=4):
     trajectories = {}
-    filename = 'raw_data/dissimilar_trajectories_{}_{}_{}.csv'.format(thresh, shape[0], shape[1])
-    if test_type == 'large': filename = 'raw_data/dissimilar_trajectories_{}_{}.csv'.format(shape[0], shape[1])
-    elif test_type == 'random': filename = 'raw_data/RandomSample_{}_{}.csv'.format(shape[0], shape[1])
-    elif test_type == 'test_rand': filename = 'raw_data/th_train_rnd_test_{}_{}_{}.csv'.format(thresh, shape[0], shape[1])
+    filename = 'data/RandomSample_5_10.csv'
     
     with open(filename, 'r') as f:
         lines = f.readlines()
@@ -268,13 +227,11 @@ def generateStatisticalFeatureMatrix(Ls=256, Lf=4):
     del trajectories
     print('Basic Features are created!')
     
-    ########################## Generate Statistical Feature Matrix ################################
-    statisticalFeatureMatrix = {}
+    ########################## Generate Statistical Feature Vector ################################
+    statisticalFeatureVector = {}
     for t in basicFeatures:
-        #print 'processing', t      
         matricesForTrajectory = []
         
-        #traj - store points in a trajectory
         traj= basicFeatures[t] 
         
         #features are appended into column list in the sequence of each basic feature's statistical feature and then local statistical features    
@@ -308,7 +265,6 @@ def generateStatisticalFeatureMatrix(Ls=256, Lf=4):
             for a in arr:
                 std += (a-mean)**2
             column.append(math.sqrt(std)) #standard deviation
-        #trajStatistics[i] = column
         for i in range(0,6):
             a1 = []
             a2 = []
@@ -370,34 +326,22 @@ def generateStatisticalFeatureMatrix(Ls=256, Lf=4):
             column.extend(helper_loacl_stats(a7, sum_7))
             column.extend(helper_loacl_stats(a8, sum_8))
             
-            #appending the local features 
-            #trajStatistics[i].extend(local_stats_column)
             
-        #statisticalFeatureMatrix[t] = normalizeStatFeatureMatrix(np.array(column))
-        statisticalFeatureMatrix[t] = normalizeStatFeatureMatrix(np.array(column))
+        statisticalFeatureVector[t] = normalizeStatFeatureMatrix(np.array(column))
         
     del basicFeatures
     print("######## statistical features created ###########")
-    keys = [k.split("|") for k, v in statisticalFeatureMatrix.items()]
-    list_1 = statisticalFeatureMatrix.values()
-    print(len(list_1))
-    print(len(list_1[0]))
-   
-    file_name = "data2/dissimilar_trajectories_{}_{}_{}_ndl_10_v2".format(thresh, shape[0], shape[1])
-    if test_type == 'large':
-        file_name = "data3/dissimilar_trajectories_{}_{}_ndl_10_v2".format(shape[0], shape[1])
-    elif test_type == 'random':
-        file_name = "data4/random_trajectories_{}_{}_ndl_10_v2".format(shape[0], shape[1])
-    elif test_type == 'test_rand':
-        file_name = "data5/th_train_rnd_test_{}_{}_{}_ndl_10_v2".format(thresh, shape[0], shape[1])
+    keys = [k.split("|") for k, v in statisticalFeatureVector.items()]
+    list_1 = statisticalFeatureVector.values()
+    print('number of trajectories:', len(list_1))
+    print('size of each feature vector:', len(list_1[0])) 
+
+    file_name = 'data/non_deep_features_v2'
     cPickle.dump(keys, open(file_name + '.pkl', "wb"))
     del keys
-    np.save(file_name + '.npy', np.vstack(statisticalFeatureMatrix.values()))
-
-
-# In[20]:
+    np.save(file_name + '.npy', np.vstack(statisticalFeatureVector.values()))
 
 
 if __name__ == '__main__':
-    generateStatisticalFeatureMatrix()
+    generateStatisticalFeatureVector()
 

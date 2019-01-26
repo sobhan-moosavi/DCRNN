@@ -1,9 +1,9 @@
 '''
-	This code is to create feature matrix for non-deep learning baselines such as Gradient Boosting Decision Tree (GBDT) model. 
-	Feature vector here is the original vector used by Dong et al. (2016), as their non-deep learning baseline. 
-	Vector created by this method will be of size 321
-	Developed by: Sreeja R. Thoom 
-	Updated by: Sobhan Moosavi	
+    This code is to create feature matrix for non-deep learning baselines such as Gradient Boosting Decision Tree (GBDT) model. 
+    Feature vector here is the original vector used by Dong et al. (2016), as their non-deep learning baseline. 
+    Vector created by this method will be of size 321
+    Developed by: Sreeja R. Thoom 
+    Updated by: Sobhan Moosavi    
 '''
 
 import numpy as np
@@ -20,7 +20,6 @@ class point:
         self.lat = lat
         self.lng = lng
         self.time = time
-
 
 class basicfeatures:
     speedNorm = 0
@@ -47,7 +46,6 @@ def returnAngularDisplacement(fLat, fLon, sLat, sLon):
     dis = np.sqrt((fLat-sLat)**2 + (fLon-sLon)**2)
     return dis
 
-
 # a helper function to calculate several statistics
 def helper_loacl_stats(arr, mean):
     column = []
@@ -70,15 +68,13 @@ def helper_loacl_stats(arr, mean):
         column.extend([0.0,0.0,0.0,0.0,0.0,0.0,0.0])
     return column
 
-
 # to normalize feature vector created for a trajectory
-def normalizeFeatureVector(statisticalFeatureMatrix, minimum=0, maximum=10):
+def normalizeFeatureVector(statisticalFeatureVector, minimum=0, maximum=10):
     r = float(maximum-minimum)
-    mins = statisticalFeatureMatrix.min((0))
-    maxs = statisticalFeatureMatrix.max((0))    
-    statisticalFeatureMatrix = np.nan_to_num(minimum + ((statisticalFeatureMatrix-mins)/(maxs-mins))*r)
-    return statisticalFeatureMatrix
-
+    mins = statisticalFeatureVector.min((0))
+    maxs = statisticalFeatureVector.max((0))    
+    statisticalFeatureVector = np.nan_to_num(minimum + ((statisticalFeatureVector-mins)/(maxs-mins))*r)
+    return statisticalFeatureVector
 
 # to return bin value for heading to create several buckets
 def returnBinValue(fLat, fLng, sLat, sLng, tLat, tLng):
@@ -110,7 +106,6 @@ def returnBinValue(fLat, fLng, sLat, sLng, tLat, tLng):
     else:
         return 8    
 
-
 # to calculate haversine distance between two points 
 def haversineDistance(aLat, aLng, bLat, bLng, metric='mi'):
     #From degree to radian
@@ -131,7 +126,6 @@ def haversineDistance(aLat, aLng, bLat, bLng, metric='mi'):
     c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
        
     return R * c
-
 
 # a helper function to calculate rectangle-based features
 def helper_rectangle(points):
@@ -158,7 +152,6 @@ def helper_rectangle(points):
     result.append(length)
     result.append(bredth)
     return result
-
 
 # to generate feature vector for a trajectory
 def generateFeatureVector():
@@ -235,8 +228,8 @@ def generateFeatureVector():
     del trajectories
     print('Basic Features are created!')
     
-    ########################## Generate Statistical Feature Matrix ################################
-    statisticalFeatureMatrix = {}
+    ########################## Generate Statistical Feature Vector ################################
+    statisticalFeatureVector = {}
     for t in basicFeatures:
         #print 'processing', t      
         matricesForTrajectory = []
@@ -275,7 +268,6 @@ def generateFeatureVector():
             for a in arr:
                 std += (a-mean)**2
             column.append(math.sqrt(std)) #standard deviation
-        #trajStatistics[i] = column
         for i in range(0,5):
             a1 = []
             a2 = []
@@ -337,19 +329,19 @@ def generateFeatureVector():
             column.extend(helper_loacl_stats(a7, sum_7))
             column.extend(helper_loacl_stats(a8, sum_8))
                         
-        statisticalFeatureMatrix[t] = normalizeFeatureVector(np.array(column))
+        statisticalFeatureVector[t] = normalizeFeatureVector(np.array(column))
         
     del basicFeatures
     print("######## statistical features created ###########")
-    keys = [k.split("|") for k, v in statisticalFeatureMatrix.items()]
-    list_1 = statisticalFeatureMatrix.values()
-    print('number of drivers:', len(list_1))
+    keys = [k.split("|") for k, v in statisticalFeatureVector.items()]
+    list_1 = statisticalFeatureVector.values()
+    print('number of trajectories:', len(list_1))
     print('size of each feature vector:', len(list_1[0]))    
     
     file_name = 'data/non_deep_features_v1'
     cPickle.dump(keys, open(file_name + '.pkl', "wb"))
     del keys
-    np.save(file_name + '.npy', np.vstack(statisticalFeatureMatrix.values()))
+    np.save(file_name + '.npy', np.vstack(statisticalFeatureVector.values()))
 
 if __name__ == '__main__':
     generateFeatureVector()
