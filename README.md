@@ -8,15 +8,15 @@ In this repository we provide all the implementations for our models and baselin
 * Feature Vector V2: to generate the modified feature vector for a trajectory to be used by GBDT model, use ```Create_FeatureVector_V2.py```. 
 
 ## Models
-* __D-CRNN__: this is our proposed model to perform driver prediction based on driving style information. This model combines several important compoenents of deep-neural-network architectures including recurrent, convolutional, and fully connected components. An implementation of this model in Tensorflow can be find [here](#). Following diagram also describes the design of this model: <center><img src="/files/D-CRNN_2.png" width="1100"></center>
+* __D-CRNN__: this is our proposed model to perform driver prediction based on driving style information. This model combines several important compoenents of deep-neural-network architectures including recurrent, convolutional, and fully connected components. An implementation of this model in Tensorflow can be find [here](https://github.com/sobhan-moosavi/DCRNN/blob/master/DCRNN.py). Following diagram also describes the design of this model: <center><img src="/files/D-CRNN_2.png" width="1100"></center>
 
 * __VRAE__: this is the Variational Recurrent Auto-encoder model, proposed by [Fabius and Amersfoort (2015)](https://arxiv.org/abs/1412.6581). Here we extend the [original implementation](https://github.com/y0ast/Variational-Recurrent-Autoencoder) to use it for driver prediction task by a modified loss function. The implementation of this model in Theano can be find [here](#). 
 
-* __GBDT__: this is a Gradient Boosting Decision Tree model which we use it for driver prediction task. A Python imeplementatin of this method based on scikit-learn library is available [here](#). 
+* __GBDT__: this is a Gradient Boosting Decision Tree model which we use it for driver prediction task. A Python imeplementatin of this method based on scikit-learn library is available [here](https://github.com/sobhan-moosavi/DCRNN/blob/master/GBDT.py). 
 
-* __CNN-model__: this is a Convolutional Neural Network model to perform driver prediction task, and is proposed by [Dong et al. (2016)](https://arxiv.org/abs/1607.03611). Imeplementation of this method in Tensorflow can be find [here](#). 
+* __CNN-model__: this is a Convolutional Neural Network model to perform driver prediction task, which is proposed by [Dong et al. (2016)](https://arxiv.org/abs/1607.03611). Imeplementation of this method in Tensorflow can be find [here](https://github.com/sobhan-moosavi/DCRNN/blob/master/CNN_model.py). 
 
-* __RNN-model__: this is a Recurrent Neural Network model to perform driver prediction task, and is proposed by [Dong et al. (2016)](https://arxiv.org/abs/1607.03611). Imeplementation of this method in Tensorflow can be find [here](#). 
+* __RNN-model__: this is a Recurrent Neural Network model to perform driver prediction task, which is proposed by [Dong et al. (2016)](https://arxiv.org/abs/1607.03611). Imeplementation of this method in Tensorflow can be find [here](https://github.com/sobhan-moosavi/DCRNN/blob/master/RNN_model.py). 
 
 ## Requirements
 * __Python__: You may use either Python 2.7 or 3. 
