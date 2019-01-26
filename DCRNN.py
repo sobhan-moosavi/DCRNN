@@ -280,7 +280,7 @@ if __name__ == '__main__':
         bestEpoch = 0    
         steps_to_epoch = len(train)/batch_size
         
-        model_name = 'models/DCRNN'        
+        model_name = 'models/DCRNN/'        
         if os.path.exists(model_name):
             shutil.rmtree(model_name)            
         os.makedirs(model_name)
