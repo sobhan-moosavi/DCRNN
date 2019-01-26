@@ -240,6 +240,7 @@ def convertLabelsToOneHotVector(labels, ln):
     labels =  enc.transform(tmp_lb).toarray()
     return labels
 
+
     
 def returnTripLevelAccuracy(test_labels, test_tripId, probabilities, num_classes):    
     lbl = ''
@@ -268,6 +269,7 @@ def returnTripLevelAccuracy(test_labels, test_tripId, probabilities, num_classes
         
     return correct/total
  
+
  
 if __name__ == '__main__':
     
@@ -318,7 +320,7 @@ if __name__ == '__main__':
         bestEpoch = 0
         
         saver = tf.train.Saver() #This is the saver of the model    
-        model_name = 'models/CRNN_model/'        
+        model_name = 'models/CNN_model/'        
         if os.path.exists(model_name):
             shutil.rmtree(model_name)            
         os.makedirs(model_name)

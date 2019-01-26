@@ -1,7 +1,6 @@
 """
-This is an implementtion of RNN architecture, presented in "characterizing driving styles with deep learning".
+This is an implementation of RNN architecture which is presented in "characterizing driving styles with deep learning", Dong et al. (2016). 
 Author: Sobhan Moosavi
-Dropout only on the second recurrent layer!
 """
 
 from __future__ import print_function
@@ -23,22 +22,15 @@ import argparse
 import os
 import shutil
 
+# some parameters as input
 parser = argparse.ArgumentParser()
-parser.add_argument('--suffix', type=str, default='SpdAclRp')
-parser.add_argument('--shape', type=int, nargs='+', default=[50, 50])
 parser.add_argument('--epochs', type=int, default=125)
 parser.add_argument('--neurons', type=int, default=100)
-parser.add_argument('--thresh', type=float, default=0.2)
-parser.add_argument('--test', type=str, default='small')
-parser.add_argument('--maxdevsamples', type=int, default=5000)
-parser.add_argument('--combinations', type=str, default='best')
 args = parser.parse_args()
-suffix    = args.suffix
-shape     = args.shape
 epochs    = args.epochs
-thresh    = args.thresh
 
 
+# helper class
 def lazy_property(function):
     attribute = '_' + function.__name__
 
@@ -51,7 +43,7 @@ def lazy_property(function):
     return wrapper
 
 
-class SequenceClassification:
+class RNN_MODEL:
 
     def __init__(self, data, target, dropout, num_layers, timesteps=128):
         self.data = data
@@ -76,7 +68,6 @@ class SequenceClassification:
             stacked_rnn.append(cell)            
         network = tf.contrib.rnn.MultiRNNCell(cells=stacked_rnn, state_is_tuple=True)
         
-        #output, _ = tf.nn.dynamic_rnn(network, self.data, dtype=tf.float32)
         x = tf.unstack(self.data, self._timesteps, 1)
         output, _ = rnn.static_rnn(network, x, dtype=tf.float32)
         
@@ -89,18 +80,15 @@ class SequenceClassification:
         # Linear activation, using rnn inner loop last output    
         logits = tf.matmul(output[-1], weight) + bias
         soft_reg = tf.nn.softmax(logits)
-        #prediction = tf.nn.softmax(logits)        
         return soft_reg  
     
     @lazy_property
     def cost(self):
-        #cross_entropy = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=self.prediction, labels=self.target))
         cross_entropy = tf.reduce_mean(-tf.reduce_sum(self.target * tf.log(self.prediction), reduction_indices=[1]))  
         return cross_entropy
 
     @lazy_property
     def optimize(self):
-        #optimizer = tf.train.RMSPropOptimizer(learning_rate=0.003)
         optimizer = tf.train.RMSPropOptimizer(learning_rate=0.00005, momentum=0.9, epsilon=1e-6)        
         return optimizer.minimize(self.cost)
 
@@ -126,59 +114,18 @@ class SequenceClassification:
         return softmax_prob
 
 
-#Following functions are related to feature encoding [creating the statistical feature matrix for each trajectory segment]
-
-class point:
-    lat = 0
-    lng = 0
-    time = 0
-    def __init__(self, time, lat, lng):
-        self.lat = lat
-        self.lng = lng
-        self.time = time
-
-        
-class basicFeature:
-    speedNorm = 0
-    diffSpeedNorm = 0
-    accelNorm = 0
-    diffAccelNorm = 0
-    angularSpeed = 0
-    def __init__(self, speedNorm, diffSpeedNorm, accelNorm, diffAccelNorm, angularSpeed):
-        self.speedNorm = speedNorm
-        self.diffSpeedNorm= diffSpeedNorm
-        self.accelNorm= accelNorm
-        self.diffAccelNorm = diffAccelNorm
-        self.angularSpeed = angularSpeed
-
-
+# to load pre-constructed feature matrices
 def load_data(file):
     trip_segments = np.load(file)#/40.0
     print("Number of samples: {}".format(trip_segments.shape[0]))
     return trip_segments
         
         
+# to split data to train, dev, and test; default: 75% train, 10% dev, and 15% test
 def returnTrainDevTestData():
-    path = '/users/PAS0536/osu9965/Telematics/Codes/IBM-Extended-Features/'
-    pref = 'data_4'
-    if args.test == 'small':            
-        if args.combinations == 'all': pref = 'data_3'
-        matrices = load_data(path + '{}/dissimilar_trajectories_{}_{}_{}_10_{}.npy'.format(pref, thresh, shape[0], shape[1], suffix))
-        keys = cPickle.load(open(path + '{}/dissimilar_trajectories_{}_{}_{}_keys_10_{}.pkl'.format(pref, thresh, shape[0], shape[1], suffix), 'rb'))        
-        driverToTrajectoryToSet = cPickle.load(open(path + '{}/driverToTrajectoryToSet_{}_{}_{}_{}.pkl'.format(pref, thresh, shape[0], shape[1], suffix), 'rb'))
-    elif args.test == 'large':
-        if args.combinations == 'all': pref = 'data_3'
-        matrices = load_data(path + '{}/dissimilar_trajectories_{}_{}_10_{}.npy'.format(pref, shape[0], shape[1], suffix))
-        keys = cPickle.load(open(path + '{}/dissimilar_trajectories_{}_{}_keys_10_{}.pkl'.format(pref, shape[0], shape[1], suffix), 'rb'))        
-        driverToTrajectoryToSet = cPickle.load(open(path + '{}/driverToTrajectoryToSet_{}_{}_{}.pkl'.format(pref, shape[0], shape[1], suffix), 'rb'))
-    elif args.test == 'random':
-        matrices = load_data(path + 'data_5/random_trajectories_{}_{}_10_{}.npy'.format(shape[0], shape[1], suffix))
-        keys = cPickle.load(open(path + 'data_5/random_trajectories_{}_{}_keys_10_{}.pkl'.format(shape[0], shape[1], suffix), 'rb'))       
-        driverToTrajectoryToSet = cPickle.load(open(path + 'data_5/driverToTrajectoryToSet_{}_{}_{}.pkl'.format(shape[0], shape[1], suffix), 'rb'))
-    elif args.test == 'test_rand':
-        matrices = load_data(path + 'data_7/th_train_rnd_test_{}_{}_{}_10_{}.npy'.format(thresh, shape[0], shape[1], suffix))
-        keys = cPickle.load(open(path + 'data_7/th_train_rnd_test_{}_{}_{}_keys_10_{}.pkl'.format(thresh, shape[0], shape[1], suffix), 'rb'))        
-        driverToTrajectoryToSet = cPickle.load(open(path + 'data_4/driverToTrajectoryToSet_{}_{}_{}_{}.pkl'.format(thresh, shape[0], shape[1], suffix), 'rb'))
+
+    matrices = load_data('data/RandomSample_5_10.npy')
+    keys = cPickle.load(open('data/RandomSample_5_10.pkl', 'rb'))
         
     FEATURES = matrices.shape[-1]
     
@@ -206,23 +153,14 @@ def returnTrainDevTestData():
         m = matrices[idx][1:129,]
         if t != curTraj:
             curTraj = t
-            assign = 'None'
-            if t in driverToTrajectoryToSet[d]: assign = (driverToTrajectoryToSet[d])[t]
             r = random.random()
-        #m = np.transpose(m) #need this step and the next for CNN
-        #m = np.reshape(m, FEATURES*128)
-        if assign == 'train':    
-            if r < 0.9 or len(dev_data)>=args.maxdevsamples:
-                train_data.append(m)
-                train_labels.append(dr)
-            else:
-                dev_data.append(m)
-                dev_labels.append(dr)
-        elif args.test == 'test_rand' and assign == 'None':        
-            test_data.append(m)
-            test_labels.append(dr)      
-            test_tripId.append(t)
-        elif args.test != 'test_rand' and assign == 'test':
+        if r < 0.75:
+            train_data.append(m)
+            train_labels.append(dr)
+        elif r < 0.85:
+            dev_data.append(m)
+            dev_labels.append(dr)
+        else:
             test_data.append(m)
             test_labels.append(dr)      
             test_tripId.append(t)
@@ -242,7 +180,8 @@ def returnTrainDevTestData():
   
     return train_data, train_labels, dev_data, dev_labels, test_data, test_labels, test_tripId, len(driverIds), FEATURES
 
-    
+  
+  
 def convertLabelsToOneHotVector(labels, ln):
     tmp_lb = np.reshape(labels, [-1,1])
     next_batch_start = 0
@@ -253,13 +192,13 @@ def convertLabelsToOneHotVector(labels, ln):
     labels =  enc.transform(tmp_lb).toarray()
     return labels
   
+  
 
 def returnTripLevelAccuracy(test_labels, test_tripId, probabilities, num_classes):    
     lbl = ''
     probs = []
     correct = total = 0
     for i in range(len(test_labels)):
-        # if np.array_equal(test_labels[i], lbl):
         if lbl == test_tripId[i]:
             probs.append(probabilities[i])
         else:
@@ -268,7 +207,6 @@ def returnTripLevelAccuracy(test_labels, test_tripId, probabilities, num_classes
                 probs = np.asarray(probs)
                 probs = np.mean(probs, axis=0)
                 probs = (probs/np.max(probs)).astype(int)
-                #print (probs, (test_labels[i-1]).astype(int))
                 if np.sum(probs&test_labels[i-1].astype(int)) == 1: correct += 1
             probs = []
             probs.append(probabilities[i])
@@ -277,16 +215,16 @@ def returnTripLevelAccuracy(test_labels, test_tripId, probabilities, num_classes
         total += 1.0
         probs = np.asarray(probs)
         probs = np.mean(probs, axis=0)
-        probs = (probs/np.max(probs)).astype(int)        
-        #print probs, test_labels[len(test_labels)-1]
+        probs = (probs/np.max(probs)).astype(int)      
         if np.sum(probs&test_labels[len(test_labels)-1].astype(int))==1: correct += 1
         
     return correct/total
   
-  
+ 
+ 
 if __name__ == '__main__':
 
-    ITERATIONS = 3
+    ITERATIONS = 3   # number of times to repeat the experiment
     ALL_SEG_ACC = []
     ALL_TRP_ACC = []
     
@@ -294,12 +232,8 @@ if __name__ == '__main__':
         tf.reset_default_graph()
         print ('\n\n************ Iteration: {} ************\n'.format(IT+1))
         
-        #FEATURES = 105
-        # suffix = ''
-        print ('suffix is \'{}\', and training goes for {} epochs!'.format(suffix, epochs))
         
         # We treat images as sequences of pixel rows.
-        # args = [50, 50]
         st = time.time()
         train, train_labels, dev, dev_labels, test, test_labels, test_tripId, num_classes, FEATURES = returnTrainDevTestData()
         
@@ -323,7 +257,7 @@ if __name__ == '__main__':
         data = tf.placeholder(tf.float32, [None, 128, FEATURES])    
         target = tf.placeholder(tf.float32, [None, num_classes])
         dropout = tf.placeholder(tf.float32, [len(dropouts_train)])
-        model = SequenceClassification(data, target, dropout, num_layers)
+        model = RNN_MODEL(data, target, dropout, num_layers)
         sess = tf.Session()
         sess.run(tf.global_variables_initializer())
         
@@ -335,12 +269,9 @@ if __name__ == '__main__':
         
         maxTestAccuracy = 0.0 #This will be used as a constraint to save the best model
         bestEpoch = 0    
-        saver = tf.train.Saver() #This is the saver of the model    
-        if args.test == 'small' or args.test == 'test_rand': 
-            model_name = 'models/RNN_D{}_T{}_{}_{}_Tr{}/'.format(shape[0], shape[1], suffix, args.test, thresh)
-        else: 
-            model_name = 'models/RNN_D{}_T{}_{}_{}/'.format(shape[0], shape[1], suffix, args.test)
         
+        saver = tf.train.Saver() #This is the saver of the model    
+        model_name = 'models/RNN_model/'        
         if os.path.exists(model_name):
             shutil.rmtree(model_name)            
         os.makedirs(model_name)
@@ -386,7 +317,6 @@ if __name__ == '__main__':
         # calculate trip-level prediction accuracy
         probabilities = sess.run(model.predProbs, {data: test, target: test_labels, dropout: dropouts_dev})
         trip_level_accuracy = returnTripLevelAccuracy(test_labels, test_tripId, probabilities, num_classes)
-        #print('Final Test-Accuracy: {:.2f}%, Train-Time: {:.1f}sec'.format(accuracy*100, (time.time()-train_start)))
         print('Test-Accuracy(segment): {:.2f}%, Test-Accuracy(trip): {:.2f}%,Train-Time: {:.1f}sec'.format(accuracy*100, trip_level_accuracy*100, (time.time()-train_start)))
         print('Partial Best Test-Accuracy: {:.2f}%, Best Epoch: {}'.format(maxTestAccuracy*100, bestEpoch))        
         
