@@ -3,9 +3,9 @@
 This repository contains all the implementations (proposed models as well as baselines) and sample files for the D-CRNN paper. 
 
 ## Feature Engineering 
-* Statistical Feature Matrix: to generate feature matrix as input for deep models, use ```Create_FeatureMatrix.py```. 
-* Feature Vector V1: to generate the original feature vector for a trajectory to be used by GBDT model, use ```Create_FeatureVector_V1.py```. 
-* Feature Vector V2: to generate the modified feature vector for a trajectory to be used by GBDT model, use ```Create_FeatureVector_V2.py```. 
+* __Statistical Feature Matrix__: to generate feature matrix as input for deep models, use ```Create_FeatureMatrix.py```. 
+* __Feature Vector V1__: to generate the original feature vector for a trajectory to be used by GBDT model, use ```Create_FeatureVector_V1.py```. 
+* __Feature Vector V2__: to generate the modified feature vector for a trajectory to be used by GBDT model, use ```Create_FeatureVector_V2.py```. 
 
 ## Models
 * __D-CRNN__: this is our proposed model to perform driver prediction based on driving style information. This model combines several important compoenents of deep-neural-network architectures including recurrent, convolutional, and fully connected components. An implementation of this model in Tensorflow can be find [here](https://github.com/sobhan-moosavi/DCRNN/blob/master/DCRNN.py). Following diagram also describes the design of this model: <center><img src="/files/D-CRNN_2.png" width="1100"></center>
@@ -34,7 +34,7 @@ __Creating Feature Vector/Matrix__
 
 __Modeling and Prediction__
 * Run Deep Models: You just need to use ```python [MODEL_NAME].py```. Make sure you have all the requirements satisfied. 
-* Run GBDT Models: Set the desired input data file in script and use ```python GBDT.py``` to run the script. 
+* Run GBDT Models: Set the desired input data file in script and use ```python GBDT.py``` to run the model. 
 
 ## Sample Data
 You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN/tree/master/data) directory. In this file we have 5 drivers, and 10 random trajectories for each driver. The format of this file is described as follows: 
@@ -69,4 +69,4 @@ Following is the result of different models on a random sample set of 50 drivers
 
 
 ## Acknowledgments 
-Please cite the following paper when use this code: TBD
+* Sobhan Moosavi, Pravar D. Mahajan, Eric Fosler-Lussier, Colleen Saunders-Chukwu, and Rajiv Ramnath; "Driving Style Representation in Convolutional Recurrent Neural Network Models of Driver Identification"; 2019 
