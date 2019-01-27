@@ -6,15 +6,11 @@ Author: Sobhan Moosavi
 from __future__ import print_function
 from __future__ import division
 import tensorflow as tf
-from tensorflow.contrib import rnn
 
 import numpy as np
 import random
-import math
-from scipy import stats
 import time
 import cPickle
-import time
 
 from sklearn.preprocessing import OneHotEncoder
 import functools

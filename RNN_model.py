@@ -10,9 +10,6 @@ from tensorflow.contrib import rnn
 
 import numpy as np
 import random
-import math
-from scipy import stats
-import time
 import cPickle
 import time
 

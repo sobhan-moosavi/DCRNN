@@ -69,7 +69,7 @@ def helper_loacl_stats(arr, mean):
     return column
 
 # to normalize feature vector created for a trajectory
-def normalizeFeatureVector(statisticalFeatureVector, minimum=0, maximum=10):
+def normalizeFeatureVector(statisticalFeatureVector, minimum=0, maximum=1):
     r = float(maximum-minimum)
     mins = statisticalFeatureVector.min((0))
     maxs = statisticalFeatureVector.max((0))    
