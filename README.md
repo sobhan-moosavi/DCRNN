@@ -20,10 +20,9 @@ This repository contains all the implementations (including proposed models as w
 
 ## Requirements
 * __Python__: You may use either Python 2.7 or 3. 
-* __Tensorflow__: For all deep models except VRAE, you need Tensorflow (```version >= 1.12.0``` is recommended). 
-* __Theano__: To run VRAE model, you need theano version > ??. 
-* __Cuda Library__: You need to have Cuda Library for tensorflow-based codes, and ```version > 9.0.176``` is recommended. 
-* __Scikit-learn__: For GBDT models, you need to install scikit-learn library. 
+* __Tensorflow__: For all the deep models, except VRAE, you need Tensorflow (```version >= 1.12.0``` is recommended). 
+* __Theano__: To run VRAE model, you need Theano (```version >= ???``` is recommended). 
+* __Cuda Library__: You need Cuda Library for tensorflow and theano-based codes; ```version > 9.0.176``` is recommended. 
 
 Note that our models can be run on both CPU and GPU machines. 
 
