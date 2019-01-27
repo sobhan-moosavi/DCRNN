@@ -1,6 +1,6 @@
 # Driving Style Representation in Convolutional Recurrent Neural Network Models of Driver Identification
 
-In this repository we provide all the implementations for our models and baselines, along with several sample files to reproduce our results.
+This repository contains all the implementations (proposed models as well as baselines) and sample files for the D-CRNN paper. 
 
 ## Feature Engineering 
 * Statistical Feature Matrix: to generate feature matrix as input for deep models, use ```Create_FeatureMatrix.py```. 
