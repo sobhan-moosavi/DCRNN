@@ -33,7 +33,7 @@ __Creating Feature Vector/Matrix__
 
 __Modeling and Prediction__
 * Run Deep Models: You just need to use ```python [MODEL_NAME].py```. Make sure you have all the requirements satisfied. 
-* Run GBDT Models: Set the desired input data file in script and use ```python GBDT.py``` to run the model. 
+* Run GBDT Models: Set the desired input data file in script and use ```python GBDT.py``` to run the model. Use ```--version v1``` for the original feature vector (size 321), or ```--version v2``` for the modified version (size 384). 
 
 ## Sample Data
 You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN/tree/master/data) directory. In this file we have 5 drivers, and 10 random trajectories for each driver. The format of this file is described as follows: 
