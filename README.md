@@ -8,7 +8,7 @@ This repository contains all the implementations (including proposed models as w
 * __Feature Vector V2__: to generate the modified feature vector for a trajectory to be used by GBDT model, use ```Create_FeatureVector_V2.py```. 
 
 ## Models
-* __D-CRNN__: this is our proposed model to perform driver prediction based on driving style information. This model combines several important compoenents of deep-neural-network architectures including recurrent, convolutional, and fully connected components. An implementation of this model in Tensorflow can be find [here](https://github.com/sobhan-moosavi/DCRNN/blob/master/DCRNN.py). Following diagram also describes the design of this model: <center><img src="/files/D-CRNN_2.png" width="1100"></center>
+* __D-CRNN__: this is our proposed model to perform driver prediction based on driving style information. This model combines several important compoenents of deep-neural-network architectures including recurrent, convolutional, and fully connected components. An implementation of this model in Tensorflow can be find [here](https://github.com/sobhan-moosavi/DCRNN/blob/master/DCRNN.py). Following diagram also describes the design of this model: <!-- <center><img src="/files/D-CRNN_2.png" width="1100"></center> -->
 
 * __VRAE__: this is the Variational Recurrent Auto-encoder model, proposed by [Fabius and Amersfoort (2015)](https://arxiv.org/abs/1412.6581). Here we extend the [original implementation](https://github.com/y0ast/Variational-Recurrent-Autoencoder) to use it for driver prediction task by a modified loss function. The implementation of this model in Theano can be find [here](#). 
 
