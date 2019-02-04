@@ -3,8 +3,11 @@ import theano
 import theano.tensor as T
 from theano import printing
 from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+from sklearn.neural_network import MLPClassifier
+import progressbar
 
-import cPickle as pickle
+import pickle
+import random
 from collections import OrderedDict
 
 class VRAE:
@@ -264,3 +267,203 @@ class VRAE:
             self.m[name].set_value(m_list[name].astype(theano.config.floatX))
             self.v[name].set_value(v_list[name].astype(theano.config.floatX))
 
+def copy_the_model(original_model, new_model):
+    for (key, value) in original_model.params.items():
+        new_model.params[key].set_value(value.get_value())
+
+def numpy_ce_loss(model_out, expected_out):
+    if model_out.shape[1] == 1:
+        return -(np.sum(np.log(model_out) * expected_out + (np.log(1-model_out))*(1-expected_out))/model_out.shape[0])
+    else:
+        return -(np.sum(np.log(model_out) * expected_out)/model_out.shape[0])
+
+def shuffle_in_union(data, keys):
+    rng_state = np.random.get_state()
+    np.random.shuffle(keys)
+    np.random.set_state(rng_state)
+    np.random.shuffle(data)
+    np.random.set_state(rng_state)
+    return data, keys
+
+def returnTrainAndTestData():
+
+    matrices = np.load('./data/RandomSample_5_10.npy')
+    keys = pickle.load(open('./data/RandomSample_5_10.pkl'))
+    FEATURES = matrices.shape[-1]
+    
+    train_data = []
+    train_labels = []
+    dev_data = []
+    dev_labels = []
+    test_data = []
+    test_labels = []
+    
+    curTraj = ''
+    assign = ''
+    test_traj = []
+    traj_to_driver = {}
+    
+    driverIds = {}
+    
+    for idx in range(len(keys)):
+        d,t = keys[idx]
+        if d in driverIds:
+            dr = driverIds[d]
+        else: 
+            dr = len(driverIds)
+            driverIds[d] = dr
+        m = matrices[idx][1:129,]
+        if t != curTraj:
+            curTraj = t
+            r = random.random()                    
+        if r < 0.75:
+          train_data.append(m)
+          train_labels.append(dr)
+        elif r < 0.85:
+            dev_data.append(m)
+            dev_labels.append(dr)
+        else:
+          test_traj.append(t)
+          test_data.append(m)
+          test_labels.append(dr)        
+          traj_to_driver[t] = dr
+
+    train_data   = np.asarray(train_data, dtype="float32")
+    train_labels = np.asarray(train_labels, dtype="int32")
+    dev_data     = np.asarray(dev_data, dtype="float32")
+    dev_labels   = np.asarray(dev_labels, dtype="int32")
+    test_data    = np.asarray(test_data, dtype="float32")
+    test_labels  = np.asarray(test_labels, dtype="int32")
+
+    train_data, train_labels = shuffle_in_union(train_data, train_labels)
+    
+    if len(dev_data) == 0:
+        train_data, dev_data, train_labels, dev_labels = train_test_split(train_data, train_labels, test_size=0.2)
+    return train_data, train_labels, dev_data, dev_labels, test_data, test_labels, test_traj, traj_to_driver, FEATURES
+
+if __name__ == "__main__":
+    MAX_EARLY_STOP_COUNT = 5
+    rnn_size = 256
+    latent_size = 256
+    num_drivers = 50
+    batch_size = 256
+    lamda1 = 1/3
+    lamda2 = 1/3
+    lamda_l1 = 0.0
+    lamda_l2 = 0.0
+    dropout = 0
+    num_epochs = 200
+
+
+    x_train, t_train, x_valid, t_valid, x_test, t_test, test_traj, traj_to_driver, num_features = returnTrainAndTestData()
+    
+    model = VRAE(rnn_size, rnn_size, num_features, latent_size, num_drivers, batch_size=batch_size, lamda1=lamda1, lamda_l2=lamda_l2, lamda_l1=lamda_l1, dropout=dropout)
+    saved_model = VRAE(rnn_size, rnn_size, num_features, latent_size, num_drivers, batch_size=batch_size, lamda1=lamda1, lamda_l2=lamda_l2, lamda_l1=lamda_l1)
+
+
+    batch_order = np.arange(x_train.shape[0] // model.batch_size + 1)
+    val_batch_order = np.arange(x_valid.shape[0] // model.batch_size + 1)
+    epoch = 0
+    LB_list = []
+
+    model.create_gradientfunctions(x_train, t_train, x_valid, t_valid)
+    saved_model.create_gradientfunctions(x_train, t_train, x_valid, t_valid)
+
+    print("iterating")
+    best_val_score = -float("inf")
+    prev_val_score = -float("inf")
+    early_stop_count = MAX_EARLY_STOP_COUNT
+
+    while epoch <  num_epochs and early_stop_count > 0:
+        epoch += 1
+        np.random.shuffle(batch_order)
+        train_total_loss = 0.0
+        train_driver_loss = 0.0
+        val_total_loss = 0.0
+        val_driver_loss = 0.0
+
+        bar = progressbar.ProgressBar()
+
+        for batch in bar(batch_order):
+            batch_end = min(model.batch_size*(batch+1), x_train.shape[0])
+            batch_start = model.batch_size*batch
+            l1, l2 = model.updatefunction(epoch, batch_start, batch_end)
+            train_total_loss += (l1+l2)*(batch_end-batch_start)
+            train_driver_loss += l2*(batch_end-batch_start)
+
+        train_total_loss /= x_train.shape[0]
+        train_driver_loss /= x_train.shape[0]
+
+        print("Epoch {0} finished. Total Training Loss: {1}, Driver Loss: {2}".format(epoch, train_total_loss, train_driver_loss))
+
+        bar = progressbar.ProgressBar()
+        valid_LB = 0.0
+        val_LB1 = 0.0
+        val_LB2 = 0.0
+        S_mean  = 0.0
+        S_mmm = 0.0
+        S_var = 0.0
+
+        for batch in bar(val_batch_order):
+            batch_end = min(model.batch_size*(batch+1), x_valid.shape[0])
+            batch_start = model.batch_size*batch
+            l1, l2, s_mmm, s_var, s_mean = model.likelihood(batch_start, batch_end)
+            val_total_loss += (l1+l2)*(batch_end-batch_start)
+            val_driver_loss += l2*(batch_end-batch_start)
+
+
+        val_total_loss /= x_valid.shape[0]
+        val_driver_loss /= x_valid.shape[0]
+
+        print("Val loss: {}, Val driver loss: {}".format(val_total_loss, val_driver_loss))
+
+        ###Classification
+        h_train = []
+        h_val = []
+
+        for i in range(x_train.shape[0]//model.batch_size+1):
+            h_train.append(model.encoder(x_train[i*model.batch_size:(i+1)*model.batch_size].transpose(1, 0, 2).astype(theano.config.floatX)))
+        for i in range(x_valid.shape[0]//model.batch_size+1):
+            h_val.append(model.encoder(x_valid[i*model.batch_size:(i+1)*model.batch_size].transpose(1, 0, 2).astype(theano.config.floatX)))
+
+        h_train = np.concatenate(h_train)
+        h_val = np.concatenate(h_val)
+
+        clf = MLPClassifier(hidden_layer_sizes=(), verbose=0, max_iter=70, batch_size=256)
+        clf.fit(h_train, t_train)
+
+        train_predictions = clf.predict(h_train)
+        val_predictions = clf.predict(h_val)
+
+        train_score = np.mean(train_predictions == t_train)
+        val_score = np.mean(val_predictions == t_valid)
+
+        print("Accuracy on train: %0.4f" % train_score)
+        print("Accuracy on val: %0.4f" % val_score)
+
+        if val_score > best_val_score:
+            print "Updating model"
+            best_val_score = val_score
+            copy_the_model(model, saved_model)
+
+        if val_score < prev_val_score:
+            early_stop_count -= 1
+            print("Early stopping count reduced to " + str(early_stop_count))
+        else:
+            early_stop_count = MAX_EARLY_STOP_COUNT
+
+        prev_val_score = val_score
+
+    h_test = []
+    for i in range(x_test.shape[0]//saved_model.batch_size+1):
+        h_test.append(saved_model.encoder(x_test[i*saved_model.batch_size:(i+1)*saved_model.batch_size].transpose(1, 0, 2).astype(theano.config.floatX)))
+    h_test = np.concatenate(h_test)
+    print("Accuracy on test: %0.4f" % clf.get_accuracy(h_test, Y_test))
+
+    y_test = clf.predict(h_test)
+    df = pd.DataFrame(y_test)
+    df['traj'] = test_traj
+    groupby = df.groupby('traj').sum()
+    trip_preds = groupby.idxmax(1)
+    trip_accuracy = float(sum([traj_to_driver[k]==v for (k, v) in trip_preds.iteritems()]))/trip_preds.shape[0]
+    print("Trip level prediction accuracy = {:.2f}".format(trip_accuracy))
