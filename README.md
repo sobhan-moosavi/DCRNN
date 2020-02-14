@@ -53,7 +53,7 @@ You may find a raw sample file in [data](https://github.com/sobhan-moosavi/DCRNN
 |AccelY| Shows the acceleration sensor reading along with Y-axis. |
 |AccelZ| Shows the acceleration sensor reading along with Z-axis. |
 
-
+<!--
 ## Sample Results
 Following is the result of different models on a random sample set of 50 drivers, with 50 trajectories for each driver. For deep models, we report accuracy on both segment as well as trajectory, see the [paper](#) for details. 
 
@@ -65,6 +65,7 @@ Following is the result of different models on a random sample set of 50 drivers
 | RNN-model | 55.45% | 70.73% |
 | VRAE | 51.28% | 63.67% |
 | D-CRNN | __62.94%__ | __78.00%__ |
+-->
 
 
 ## Acknowledgments 
