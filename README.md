@@ -69,4 +69,4 @@ Following is the result of different models on a random sample set of 50 drivers
 
 
 ## Acknowledgments 
-* Sobhan Moosavi, Pravar D. Mahajan, Srinivasan Parthasarathy, Colleen Saunders-Chukwu, and Rajiv Ramnath; _"Driving Style Representation in Convolutional Recurrent Neural Network Models of Driver Identification"_, 2020 
+* [Sobhan Moosavi, Pravar D. Mahajan, Srinivasan Parthasarathy, Colleen Saunders-Chukwu, and Rajiv Ramnath; _"Driving Style Representation in Convolutional Recurrent Neural Network Models of Driver Identification"_, 2020](https://arxiv.org/abs/2102.05843)
